@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>배틀 가챠미소년 ✨</title>
+  <meta name="description" content="귀여운 미소년/빌런과 배틀하는 파스텔톤 가챠 게임! 시비 걸고 승리를 거머쥐어라!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ===== CSS RESET & VARIABLES ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --pink: #FFB7C5;
+      --pink-deep: #FF85A1;
+      --pink-light: #FFE4EC;
+      --blue: #A8D8EA;
+      --blue-deep: #6CB4D2;
+      --blue-light: #D6EFF8;
+      --yellow: #FFF3B0;
+      --yellow-deep: #FFD700;
+      --purple: #C9B1FF;
+      --mint: #B5EAD7;
+      --peach: #FFDAC1;
+      --bg: #FFF0F5;
+      --text-dark: #4A3F55;
+      --text-mid: #7B6D8D;
+      --text-light: #B8A9C9;
+      --white: #FFFFFF;
+      --shadow: 0 4px 20px rgba(255, 150, 180, 0.25);
+      --shadow-lg: 0 8px 40px rgba(255, 120, 160, 0.35);
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'Jua', sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ===== BACKGROUND DECORATION ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 183, 197, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(168, 216, 234, 0.3) 0%, transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(201, 177, 255, 0.25) 0%, transparent 40%),
+        linear-gradient(135deg, #FFF0F5 0%, #F0F8FF 50%, #FFF5FF 100%);
+      z-index: -1;
+    }
+
+    /* ===== FLOATING STARS ===== */
+    .star-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .star-bg span {
+      position: absolute;
+      display: block;
+      animation: floatStar linear infinite;
+      opacity: 0;
+      font-size: 1rem;
+    }
+
+    @keyframes floatStar {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===== SCREENS ===== */
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* ===== START SCREEN ===== */
+    #screen-start {
+      text-align: center;
+      gap: 24px;
+    }
+
+    .game-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: logoBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes logoBounce {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-2deg);
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(2deg);
+      }
+    }
+
+    .logo-sub {
+      font-size: 1rem;
+      color: var(--text-mid);
+      letter-spacing: 3px;
+      animation: shimmerText 3s ease infinite;
+    }
+
+    @keyframes shimmerText {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .logo-title {
+      font-size: clamp(2.2rem, 8vw, 3.8rem);
+      background: linear-gradient(135deg, var(--pink-deep), var(--purple), var(--blue-deep));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 2px 8px rgba(255, 100, 150, 0.4));
+      line-height: 1.1;
+    }
+
+    .logo-emoji-row {
+      display: flex;
+      gap: 12px;
+      font-size: 2rem;
+      animation: emojiDance 1.5s ease-in-out infinite;
+    }
+
+    .logo-emoji-row span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .logo-emoji-row span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes emojiDance {
+
+      0%,
+      100% {
+        transform: rotate(-10deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(10deg) scale(1.15);
+      }
+    }
+
+    .start-desc {
+      background: white;
+      border-radius: 20px;
+      padding: 16px 28px;
+      box-shadow: var(--shadow);
+      color: var(--text-mid);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      max-width: 360px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 40px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(100%);
+      transition: transform 0.3s;
+    }
+
+    .btn:hover::after {
+      transform: translateY(0);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pink-deep) 0%, #FF6B9D 50%, var(--purple) 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(255, 100, 160, 0.5);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(168, 216, 234, 0.5);
+    }
+
+    .btn-small {
+      font-size: 0.9rem;
+      padding: 8px 20px;
+      border-radius: 30px;
+    }
+
+    .btn-outline {
+      background: white;
+      border: 2.5px solid var(--pink-deep);
+      color: var(--pink-deep);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ===== INPUT SCREEN ===== */
+    #screen-input {
+      gap: 24px;
+      text-align: center;
+    }
+
+    .input-card {
+      background: white;
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      max-width: 480px;
+      width: 100%;
+      animation: cardAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardAppear {
+      from {
+        transform: scale(0.5) rotate(-5deg);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .input-title {
+      font-size: 1.6rem;
+      color: var(--pink-deep);
+      margin-bottom: 6px;
+    }
+
+    .input-sub {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      width: 100%;
+      font-family: 'Jua', sans-serif;
+      font-size: 1rem;
+      border: 2.5px solid var(--pink-light);
+      border-radius: 16px;
+      padding: 14px 18px;
+      background: var(--pink-light);
+      color: var(--text-dark);
+      outline: none;
+      transition: all 0.3s;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .input-field:focus {
+      border-color: var(--pink-deep);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(255, 133, 161, 0.15);
+    }
+
+    .input-field::placeholder {
+      color: var(--text-light);
+    }
+
+    .input-hint {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 8px;
+      text-align: left;
+    }
+
+    /* ===== GACHA ROULETTE SCREEN ===== */
+    #screen-gacha {
+      gap: 20px;
+      text-align: center;
+    }
+
+    .roulette-title {
+      font-size: 1.8rem;
+      color: var(--text-dark);
+    }
+
+    .roulette-title span {
+      color: var(--pink-deep);
+    }
+
+    .roulette-box {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow-lg);
+      max-width: 460px;
+      width: 100%;
+    }
+
+    .roulette-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+
+    .roulette-strip-wrapper {
+      overflow: hidden;
+      border-radius: 12px;
+      background: var(--pink-light);
+      height: 52px;
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .roulette-strip-wrapper::before,
+    .roulette-strip-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      z-index: 2;
+    }
+
+    .roulette-strip-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, var(--pink-light), transparent);
+    }
+
+    .roulette-strip-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, var(--pink-light), transparent);
+    }
+
+    .roulette-strip {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      gap: 0;
+      will-change: transform;
+    }
+
+    .roulette-item {
+      flex-shrink: 0;
+      padding: 0 18px;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      white-space: nowrap;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .roulette-item.highlight {
+      background: linear-gradient(135deg, var(--pink-deep), var(--purple));
+      color: white;
+      border-radius: 10px;
+      font-size: 1.05rem;
+    }
+
+    .roulette-arrow {
+      text-align: center;
+      font-size: 1.5rem;
+      margin: -4px 0;
+    }
+
+    /* ===== BATTLE SCREEN ===== */
+    #screen-battle {
+      gap: 16px;
+      padding-bottom: 40px;
+    }
+
+    /* Announcement banner */
+    .announce-banner {
+      background: linear-gradient(135deg, var(--purple), var(--pink-deep));
+      color: white;
+      border-radius: 20px;
+      padding: 14px 24px;
+      text-align: center;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow);
+      max-width: 520px;
+      width: 100%;
+      animation: bannerPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes bannerPop {
+      from {
+        transform: scale(0.5) translateY(-30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .announce-banner .char-name {
+      font-size: 1.35rem;
+      color: var(--yellow-deep);
+    }
+
+    .announce-rate {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    /* Character Card */
+    .char-card-wrapper {
+      perspective: 800px;
+    }
+
+    .char-card {
+      background: white;
+      border-radius: 28px;
+      padding: 24px 20px;
+      box-shadow: var(--shadow-lg);
+      max-width: 340px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: cardFlipIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.15s ease;
+    }
+
+    @keyframes cardFlipIn {
+      from {
+        transform: rotateY(90deg) scale(0.5);
+        opacity: 0;
+      }
+
+      to {
+        transform: rotateY(0deg) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Grade borders */
+    .grade-L {
+      border: 4px solid transparent;
+      background-clip: padding-box;
+      box-shadow: 0 0 0 4px transparent, var(--shadow-lg);
+      animation: cardFlipIn 0.7s, rainbowBorder 2s linear infinite;
+    }
+
+    .grade-SSR {
+      border: 4px solid var(--yellow-deep);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), var(--shadow-lg);
+    }
+
+    .grade-SR {
+      border: 4px solid var(--purple);
+      box-shadow: 0 0 16px rgba(201, 177, 255, 0.7), var(--shadow-lg);
+    }
+
+    .grade-R {
+      border: 4px solid var(--pink-deep);
+      box-shadow: 0 0 12px rgba(255, 133, 161, 0.5), var(--shadow-lg);
+    }
+
+    .grade-UC {
+      border: 4px solid var(--blue-deep);
+      box-shadow: 0 0 10px rgba(108, 180, 210, 0.4), var(--shadow-lg);
+    }
+
+    .grade-C {
+      border: 4px solid #C8C0D4;
+      box-shadow: var(--shadow);
+    }
+
+    @keyframes rainbowBorder {
+      0% {
+        box-shadow: 0 0 25px 6px #FF6B9D, var(--shadow-lg);
+      }
+
+      16% {
+        box-shadow: 0 0 25px 6px #FFD700, var(--shadow-lg);
+      }
+
+      33% {
+        box-shadow: 0 0 25px 6px #A8FF78, var(--shadow-lg);
+      }
+
+      50% {
+        box-shadow: 0 0 25px 6px #78D5FF, var(--shadow-lg);
+      }
+
+      66% {
+        box-shadow: 0 0 25px 6px #C9B1FF, var(--shadow-lg);
+      }
+
+      83% {
+        box-shadow: 0 0 25px 6px #FFB7C5, var(--shadow-lg);
+      }
+
+      100% {
+        box-shadow: 0 0 25px 6px #FF6B9D, var(--shadow-lg);
+      }
+    }
+
+    .grade-badge {
+      position: absolute;
+      top: -12px;
+      right: 16px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      color: white;
+    }
+
+    .badge-L {
+      background: linear-gradient(90deg, #FF6B9D, #FFD700, #A8FF78, #78D5FF, #C9B1FF);
+      animation: badgeShimmer 2s linear infinite;
+      background-size: 200%;
+    }
+
+    .badge-SSR {
+      background: linear-gradient(90deg, #FFD700, #FFA500);
+    }
+
+    .badge-SR {
+      background: linear-gradient(90deg, var(--purple), #9B8FFF);
+    }
+
+    .badge-R {
+      background: linear-gradient(90deg, var(--pink-deep), #FF6B9D);
+    }
+
+    .badge-UC {
+      background: linear-gradient(90deg, var(--blue-deep), var(--blue));
+      color: #3A7FA0;
+    }
+
+    .badge-C {
+      background: #C8C0D4;
+      color: #66587A;
+    }
+
+    @keyframes badgeShimmer {
+      0% {
+        background-position: 0%;
+      }
+
+      100% {
+        background-position: 200%;
+      }
+    }
+
+    .char-img-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .char-img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .char-img-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+
+    .grade-L .char-img-ring {
+      border-color: transparent;
+      background: linear-gradient(white, white) padding-box, linear-gradient(135deg, #FF6B9D, #FFD700, #78D5FF, #C9B1FF) border-box;
+    }
+
+    .grade-SSR .char-img-ring {
+      border-color: var(--yellow-deep);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.8);
+    }
+
+    .grade-SR .char-img-ring {
+      border-color: var(--purple);
+      box-shadow: 0 0 10px rgba(201, 177, 255, 0.7);
+    }
+
+    .grade-R .char-img-ring {
+      border-color: var(--pink-deep);
+    }
+
+    .grade-UC .char-img-ring {
+      border-color: var(--blue-deep);
+    }
+
+    .grade-C .char-img-ring {
+      border-color: #C8C0D4;
+    }
+
+    .char-name-big {
+      font-size: 1.4rem;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .char-level {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      background: var(--pink-light);
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .char-type-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    .tag-misoboy {
+      background: var(--pink-light);
+      color: var(--pink-deep);
+    }
+
+    .tag-villain {
+      background: #2D1B2E;
+      color: #FF85A1;
+    }
+
+    /* ===== BATTLE AREA ===== */
+    .battle-area {
+      max-width: 520px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Speech Bubble */
+    .bubble {
+      padding: 14px 20px;
+      border-radius: 20px;
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 85%;
+      position: relative;
+      animation: bubblePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes bubblePop {
+      from {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .bubble-user {
+      background: linear-gradient(135deg, var(--pink-deep), #FF6B9D);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 6px;
+      box-shadow: 0 4px 15px rgba(255, 133, 161, 0.4);
+    }
+
+    .bubble-user::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      bottom: 12px;
+      border: 8px solid transparent;
+      border-left-color: #FF6B9D;
+      border-right: 0;
+    }
+
+    .bubble-char {
+      background: white;
+      color: var(--text-dark);
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+      box-shadow: var(--shadow);
+    }
+
+    .bubble-char::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      bottom: 12px;
+      border: 8px solid transparent;
+      border-right-color: white;
+      border-left: 0;
+    }
+
+    /* Rampage reply */
+    .bubble-rampage {
+      background: linear-gradient(135deg, #1A0A0A, #3D0000);
+      color: #FF3030;
+      font-size: 1.4rem;
+      border: 2px solid #FF3030;
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5), var(--shadow-lg);
+      animation: bubblePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), rampageShake 0.5s ease 0.4s 3;
+    }
+
+    @keyframes rampageShake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px) rotate(-1deg);
+      }
+
+      75% {
+        transform: translateX(5px) rotate(1deg);
+      }
+    }
+
+    /* Shy reply */
+    .bubble-shy {
+      background: rgba(200, 192, 212, 0.3);
+      color: #B8A9C9;
+      font-size: 0.8rem;
+      border: 1px dashed #C8C0D4;
+      box-shadow: none;
+      opacity: 0.75;
+    }
+
+    /* Shake animation for character hit */
+    @keyframes charShake {
+
+      0%,
+      100% {
+        transform: translateX(0) rotate(0deg);
+      }
+
+      20% {
+        transform: translateX(-8px) rotate(-3deg);
+      }
+
+      40% {
+        transform: translateX(8px) rotate(3deg);
+      }
+
+      60% {
+        transform: translateX(-6px) rotate(-2deg);
+      }
+
+      80% {
+        transform: translateX(6px) rotate(2deg);
+      }
+    }
+
+    .char-shake {
+      animation: charShake 0.4s ease !important;
+    }
+
+    /* Screen shake */
+    @keyframes screenShake {
+
+      0%,
+      100% {
+        transform: translate(0);
+      }
+
+      20% {
+        transform: translate(-6px, 3px);
+      }
+
+      40% {
+        transform: translate(6px, -4px);
+      }
+
+      60% {
+        transform: translate(-4px, 5px);
+      }
+
+      80% {
+        transform: translate(5px, -2px);
+      }
+    }
+
+    .screen-shake {
+      animation: screenShake 0.5s ease 3;
+    }
+
+    /* Hit effect */
+    .hit-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--pink-deep);
+      pointer-events: none;
+      animation: hitFly 0.8s ease forwards;
+      z-index: 100;
+    }
+
+    @keyframes hitFly {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(-50%, calc(-50% - 80px)) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    /* ===== RESULT ===== */
+    .result-banner {
+      text-align: center;
+      padding: 24px;
+      border-radius: 28px;
+      width: 100%;
+      max-width: 400px;
+      animation: resultReveal 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes resultReveal {
+      0% {
+        transform: scale(0) rotate(-10deg);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.1) rotate(3deg);
+      }
+
+      100% {
+        transform: scale(1) rotate(0);
+        opacity: 1;
+      }
+    }
+
+    .result-win {
+      background: linear-gradient(135deg, var(--mint), var(--blue));
+      color: #2E7D5E;
+      border: 3px solid #6ECFA5;
+      box-shadow: 0 0 30px rgba(110, 207, 165, 0.5), var(--shadow-lg);
+    }
+
+    .result-lose {
+      background: linear-gradient(135deg, var(--pink-light), var(--peach));
+      color: var(--pink-deep);
+      border: 3px solid var(--pink-deep);
+      box-shadow: 0 0 30px rgba(255, 133, 161, 0.4), var(--shadow-lg);
+    }
+
+    .result-big {
+      font-size: 3rem;
+    }
+
+    .result-msg {
+      font-size: 1rem;
+      margin-top: 8px;
+      color: inherit;
+      opacity: 0.85;
+    }
+
+    .result-score {
+      font-size: 0.85rem;
+      margin-top: 4px;
+      opacity: 0.7;
+    }
+
+    /* ===== DОCKER SCREEN ===== */
+    #screen-dex {
+      gap: 20px;
+      padding: 30px 20px;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    .dex-header {
+      text-align: center;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .dex-title {
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--pink-deep), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .dex-count {
+      font-size: 0.9rem;
+      color: var(--text-mid);
+      margin-top: 4px;
+    }
+
+    .dex-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .dex-entry {
+      background: white;
+      border-radius: 16px;
+      padding: 12px 8px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+
+    .dex-entry:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .dex-entry.undiscovered {
+      opacity: 0.45;
+      filter: grayscale(1);
+    }
+
+    .dex-entry img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 6px;
+    }
+
+    .dex-name {
+      font-size: 0.75rem;
+      color: var(--text-dark);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dex-grade-pill {
+      font-size: 0.6rem;
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-top: 3px;
+      display: inline-block;
+    }
+
+    /* ===== NAV ===== */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-top: 2px solid var(--pink-light);
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 10px 20px 14px;
+      z-index: 50;
+    }
+
+    .nav-btn {
+      font-family: 'Jua', sans-serif;
+      font-size: 0.85rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: var(--text-light);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .nav-btn .nav-icon {
+      font-size: 1.3rem;
+    }
+
+    .nav-btn.active {
+      color: var(--pink-deep);
+      background: var(--pink-light);
+    }
+
+    .nav-btn:hover:not(.active) {
+      color: var(--text-mid);
+    }
+
+    /* ===== LOADING ===== */
+    .loading-dots {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .loading-dots span {
+      width: 12px;
+      height: 12px;
+      background: var(--pink-deep);
+      border-radius: 50%;
+      animation: dotBounce 1.2s ease infinite;
+    }
+
+    .loading-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+      background: var(--purple);
+    }
+
+    .loading-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+      background: var(--blue-deep);
+    }
+
+    @keyframes dotBounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-16px);
+      }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--pink-light);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--pink);
+      border-radius: 3px;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 500px) {
+      .dex-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      }
+
+      .announce-banner {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 200;
+      animation: confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* ===== AURA for villain L ===== */
+    .villain-L-aura {
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200, 0, 0, 0.15) 0%, transparent 70%);
+      animation: auraBreath 1.5s ease-in-out infinite;
+    }
+
+    @keyframes auraBreath {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+    }
+
+    /* ===== BATTLE PROGRESS BAR ===== */
+    .battle-phase-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    .section-sep {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--pink-light), transparent);
+    }
+
+    /* Aaya reaction */
+    .aaya-text {
+      font-size: 1.5rem;
+      color: var(--pink-deep);
+      text-align: center;
+      animation: aayaPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes aayaPop {
+      from {
+        transform: scale(0);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Floating stars background -->
+  <div class="star-bg" id="starBg"></div>
+
+  <!-- ========== SCREEN: START ========== -->
+  <div class="screen active" id="screen-start">
+    <div class="game-logo">
+      <div class="logo-emoji-row">
+        <span>✨</span><span>⚔️</span><span>✨</span>
+      </div>
+      <div class="logo-sub">✦ BATTLE GACHA ✦</div>
+      <h1 class="logo-title">배틀&nbsp;가챠미소년</h1>
+    </div>
+
+    <div class="start-desc">
+      💬 시비를 걸면 야생의 미소년(또는 빌런)이 나타납니다!<br />
+      🎲 전설의 L등급부터 평범한 C등급까지 수집하세요.<br />
+      🏆 50명을 모두 도감에 채우는 것이 목표!
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-start" onclick="goToInput()">
+        ⚔️ 대결하기
+      </button>
+      <button class="btn btn-secondary btn-small" id="btn-goto-dex" onclick="showDex()">
+        📖 도감
+      </button>
+    </div>
+
+    <div style="font-size:0.8rem; color:var(--text-light); margin-top:8px;">
+      현재 수집: <span id="start-collected">0</span> / 50명
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: INPUT ========== -->
+  <div class="screen" id="screen-input">
+    <div class="input-card">
+      <div class="input-title">✏️ 시비 문구 입력</div>
+      <div class="input-sub">어떤 말로 시비를 걸건가요?</div>
+      <textarea id="sivi-input" class="input-field" placeholder="예) 야, 너 뭘 봐? / 어쩔티비~ / 라떼는 말이야…" rows="3"
+        maxlength="100"></textarea>
+      <div class="input-hint">최대 100자 · 상대 반응은 뽑힌 캐릭터 말투에 따라 달라집니다!</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+        <button class="btn btn-outline btn-small" onclick="goToStart()">← 뒤로</button>
+        <button class="btn btn-primary" id="btn-summon" onclick="startSummon()">🎲 소환!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: GACHA ROULETTE ========== -->
+  <div class="screen" id="screen-gacha">
+    <div class="roulette-title">⚡ <span>소환 중...</span> ⚡</div>
+
+    <div class="roulette-box">
+      <div class="roulette-label">🧙 캐릭터 룰렛</div>
+      <div class="roulette-strip-wrapper">
+        <div class="roulette-strip" id="roulette-char"></div>
+      </div>
+
+      <div class="roulette-arrow">🔽</div>
+
+      <div class="roulette-label" style="margin-top:8px;">💬 말투 룰렛</div>
+      <div class="roulette-strip-wrapper" style="background:var(--blue-light);">
+        <div class="roulette-strip" id="roulette-speech"></div>
+      </div>
+    </div>
+
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: BATTLE ========== -->
+  <div class="screen" id="screen-battle">
+    <!-- Announce -->
+    <div class="announce-banner" id="announce-banner"></div>
+
+    <!-- Char card -->
+    <div class="char-card-wrapper">
+      <div class="char-card" id="char-card">
+        <div class="grade-badge" id="grade-badge"></div>
+        <div class="char-img-wrap">
+          <div class="char-img-ring" id="char-img-ring"></div>
+          <img class="char-img" id="char-img" src="" alt="캐릭터" loading="lazy" />
+        </div>
+        <div class="char-name-big" id="char-name-big"></div>
+        <div class="char-level" id="char-level"></div>
+        <div class="char-type-tag" id="char-type-tag"></div>
+      </div>
+    </div>
+
+    <!-- Battle area -->
+    <div class="battle-area" id="battle-area">
+      <!-- Dynamically filled -->
+    </div>
+
+    <!-- Result -->
+    <div id="result-section"></div>
+
+    <div class="btn-row" id="after-result-btns" style="display:none;">
+      <button class="btn btn-primary" onclick="goToInput()">⚔️ 다시 대결</button>
+      <button class="btn btn-secondary btn-small" onclick="showDex()">📖 도감 보기</button>
+      <button class="btn btn-outline btn-small" onclick="goToStart()">🏠 홈</button>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: DEX ========== -->
+  <div class="screen" id="screen-dex">
+    <div class="dex-header">
+      <div class="dex-title">📖 도감</div>
+      <div class="dex-count" id="dex-count">수집 0 / 50</div>
+      <div style="margin-top:10px;">
+        <button class="btn btn-outline btn-small" onclick="goToStart()">🏠 홈으로</button>
+        <button class="btn btn-primary btn-small" style="margin-left:8px;" onclick="goToInput()">⚔️ 대결하기</button>
+      </div>
+    </div>
+
+    <div class="dex-grid" id="dex-grid"></div>
+  </div>
+
+  <script>
+    // ============================================================
+    //  DATA
+    // ============================================================
+
+    // ─── 미소년 애니 일러스트 이미지 (nekos.best/api/v2/husbando) ───
+    const MISOBOY_IMGS = [
+      "https://nekos.best/api/v2/husbando/f5e1533f-c74a-4f1f-b2c3-0e7afff0a7db.png",
+      "https://nekos.best/api/v2/husbando/8559cda6-b571-496f-a7c5-d8663033f902.png",
+      "https://nekos.best/api/v2/husbando/c0b6d7c2-760a-4664-9074-f491e1f131ce.png",
+      "https://nekos.best/api/v2/husbando/60cca3c2-557b-43ec-9532-f0fbf24d0722.png",
+      "https://nekos.best/api/v2/husbando/80d713b6-4bd1-4bf7-9c18-7ce42e1fab8f.png",
+      "https://nekos.best/api/v2/husbando/bc1821b6-1920-4f35-9cae-13f9678b644b.png",
+      "https://nekos.best/api/v2/husbando/37728dcc-3a62-4fd6-b986-fd2088a1fdd1.png",
+      "https://nekos.best/api/v2/husbando/eecdc9c1-cfdb-4fa7-9b4a-15e0a3c33049.png",
+      "https://nekos.best/api/v2/husbando/38741b3a-43c6-4c1e-be2b-a1c24265fec6.png",
+      "https://nekos.best/api/v2/husbando/8f0d9ba5-2a7d-4241-8283-89c96cabe645.png",
+      "https://nekos.best/api/v2/husbando/cfc69c22-e8bc-4e4d-88c2-db48670c2fa3.png",
+      "https://nekos.best/api/v2/husbando/7a2495e1-741e-4895-b7a2-2c0dabfbbedd.png",
+      "https://nekos.best/api/v2/husbando/f444a736-445e-4374-a030-59d72d27d082.png",
+      "https://nekos.best/api/v2/husbando/830aa050-e9d4-47d6-910a-b2b817aa2c13.png",
+      "https://nekos.best/api/v2/husbando/0b5bfc8c-6d18-4361-834c-2a4a5684d212.png",
+      "https://nekos.best/api/v2/husbando/f6b60693-246e-4b52-bad9-ec34a6874a64.png",
+      "https://nekos.best/api/v2/husbando/29d49c6e-c1c6-4cea-a919-32fdf6d8ba87.png",
+      "https://nekos.best/api/v2/husbando/3dcbd9a7-a6ed-406c-9a31-f400469eb5c9.png",
+      "https://nekos.best/api/v2/husbando/da90486b-7209-4036-a2c2-ef5656d799f7.png",
+      "https://nekos.best/api/v2/husbando/5679525a-f2fd-4f7d-9b57-e9ceea83bba7.png",
+      "https://nekos.best/api/v2/husbando/cde255c3-cb3f-4a73-ac2b-4253b43f5e02.png",
+      "https://nekos.best/api/v2/husbando/e4a6d6d9-a1a4-4830-b1cc-9bb27e224c40.png",
+      "https://nekos.best/api/v2/husbando/d47cc169-6f71-4acd-ace7-403ab981bd92.png",
+      "https://nekos.best/api/v2/husbando/76f0a1b1-feec-46c2-a1fb-188c553bb0c5.png",
+      "https://nekos.best/api/v2/husbando/05d2c701-9513-46d6-83c7-045f92cdbd41.png",
+      "https://nekos.best/api/v2/husbando/4d86d591-1faf-4e4f-96a7-ecf23b1cbad5.png",
+      "https://nekos.best/api/v2/husbando/1606de7c-fa75-4957-956b-4d6ef23db035.png",
+      "https://nekos.best/api/v2/husbando/7534532f-d925-4911-b491-6b84d338189f.png",
+      "https://nekos.best/api/v2/husbando/8056ac10-9400-41fc-ab9c-1d14e17f87b8.png",
+      "https://nekos.best/api/v2/husbando/3d59681d-0f17-40ff-ae48-bc77936d01fb.png",
+    ];
+
+    const CHARACTERS = [
+      // ─── 미소년 30명 (애니 일러스트) ───
+      { id: 1, name: "황태자 루시안", type: "misoboy", img: MISOBOY_IMGS[0] },
+      { id: 2, name: "마법사 백야", type: "misoboy", img: MISOBOY_IMGS[1] },
+      { id: 3, name: "검투사 카이로스", type: "misoboy", img: MISOBOY_IMGS[2] },
+      { id: 4, name: "왕자님 에드워드", type: "misoboy", img: MISOBOY_IMGS[3] },
+      { id: 5, name: "신관 아란", type: "misoboy", img: MISOBOY_IMGS[4] },
+      { id: 6, name: "천재 해커 레온", type: "misoboy", img: MISOBOY_IMGS[5] },
+      { id: 7, name: "비밀요원 야스오", type: "misoboy", img: MISOBOY_IMGS[6] },
+      { id: 8, name: "시인 셀라스", type: "misoboy", img: MISOBOY_IMGS[7] },
+      { id: 9, name: "드래곤 테이머 소울", type: "misoboy", img: MISOBOY_IMGS[8] },
+      { id: 10, name: "귀족 레나르", type: "misoboy", img: MISOBOY_IMGS[9] },
+      { id: 11, name: "천재 피아니스트 카이", type: "misoboy", img: MISOBOY_IMGS[10] },
+      { id: 12, name: "은하 기사 제론", type: "misoboy", img: MISOBOY_IMGS[11] },
+      { id: 13, name: "의문의 암살자 나이", type: "misoboy", img: MISOBOY_IMGS[12] },
+      { id: 14, name: "대마도사 제피르", type: "misoboy", img: MISOBOY_IMGS[13] },
+      { id: 15, name: "버추얼 아이돌 픽셀", type: "misoboy", img: MISOBOY_IMGS[14] },
+      { id: 16, name: "설산 신선 한설", type: "misoboy", img: MISOBOY_IMGS[15] },
+      { id: 17, name: "바다왕자 마린", type: "misoboy", img: MISOBOY_IMGS[16] },
+      { id: 18, name: "어둠의 시인 블레이크", type: "misoboy", img: MISOBOY_IMGS[17] },
+      { id: 19, name: "고양이 귀 요정 닐", type: "misoboy", img: MISOBOY_IMGS[18] },
+      { id: 20, name: "총명한 공자 준하", type: "misoboy", img: MISOBOY_IMGS[19] },
+      { id: 21, name: "황금 기사 아우로", type: "misoboy", img: MISOBOY_IMGS[20] },
+      { id: 22, name: "빙결의 주술사 아이스", type: "misoboy", img: MISOBOY_IMGS[21] },
+      { id: 23, name: "전설의 셰프 알레", type: "misoboy", img: MISOBOY_IMGS[22] },
+      { id: 24, name: "폭풍의 검사 제인", type: "misoboy", img: MISOBOY_IMGS[23] },
+      { id: 25, name: "신비로운 점쟁이 타로", type: "misoboy", img: MISOBOY_IMGS[24] },
+      { id: 26, name: "꽃미남 도적 로즈", type: "misoboy", img: MISOBOY_IMGS[25] },
+      { id: 27, name: "로봇공학자 코어", type: "misoboy", img: MISOBOY_IMGS[26] },
+      { id: 28, name: "천상의 성악가 세라핌", type: "misoboy", img: MISOBOY_IMGS[27] },
+      { id: 29, name: "여행시인 라루", type: "misoboy", img: MISOBOY_IMGS[28] },
+      { id: 30, name: "고독한 검객 무명", type: "misoboy", img: MISOBOY_IMGS[29] },
+      // ─── 빌런 20명 (DiceBear pixel-art 코믹 스타일) ───
+      { id: 31, name: "핵노답 잼민이", type: "villain", seed: "jamini" },
+      { id: 32, name: "부장님 꼰대", type: "villain", seed: "kkondae" },
+      { id: 33, name: "진상 아줌마", type: "villain", seed: "jinsang" },
+      { id: 34, name: "중2병 흑염룡", type: "villain", seed: "blackdragon" },
+      { id: 35, name: "유언비어 소셜러", type: "villain", seed: "rumor" },
+      { id: 36, name: "국뽕 유튜버", type: "villain", seed: "nationpride" },
+      { id: 37, name: "카공족 점령자", type: "villain", seed: "cafesquatter" },
+      { id: 38, name: "갑질 VIP", type: "villain", seed: "vipbully" },
+      { id: 39, name: "새벽 층간소음충", type: "villain", seed: "noisebug" },
+      { id: 40, name: "무한 전달자 카톡왕", type: "villain", seed: "kakaospammer" },
+      { id: 41, name: "극성 팬덤 빠순이", type: "villain", seed: "fandomfan" },
+      { id: 42, name: "인스타 허세러", type: "villain", seed: "instaposer" },
+      { id: 43, name: "지하철 쩍벌남", type: "villain", seed: "manspreader" },
+      { id: 44, name: "헬스장 괴성러", type: "villain", seed: "gymscreamer" },
+      { id: 45, name: "넷플 스포일러왕", type: "villain", seed: "spoilerking" },
+      { id: 46, name: "카톡 읽씹왕", type: "villain", seed: "ghostking" },
+      { id: 47, name: "편의점 라면 자리점령자", type: "villain", seed: "ramensquatter" },
+      { id: 48, name: "단톡방 급발진러", type: "villain", seed: "chatbomber" },
+      { id: 49, name: "자기 자랑왕 자랑선생", type: "villain", seed: "braggingteacher" },
+      { id: 50, name: "전설의 최종 빌런", type: "villain", seed: "finalvillain" },
+    ];
+
+    const SPEECHES = [
+      "공주님 적당히 하시죠 💅",
+      "어쩔티비~ 저쩔티비~",
+      "라떼는 말이야, 그땐 달랐어.",
+      "거울 안 보셨어요? 진심으로?",
+      "오... 그래서?",
+      "킹받네 진짜.",
+      "아 ㅋㅋ 그래? 재밌겠다.",
+      "뇨~! 당신이 감히?!",
+      "너 그러다 나 화나게 할라고?",
+      "오케이~ 선전포고 받았어.",
+      "흐음... 이 정도 수준이신가요?",
+      "제발 좀... 제발요.",
+      "됐거든요? 임마.",
+      "나한테 왜 이러세요 진짜.",
+      "허허 이 정도는 약과지.",
+      "그게 되게 웃기네요, 사실.",
+      "저 지금 바쁜데요?",
+      "무슨 소리를 하시는 건지 모르겠어.",
+      "와 진짜? 진짜로요?",
+      "내 인내심이 바닥났어요. ✋",
+      "ㅋㅋ 알겠습니다~ 어우~",
+      "지금 뭐라 하셨어요?",
+      "세상에 별별 사람이 다 있네.",
+      "내가 참는 게 보이지 않아요?",
+      "야, 진짜 웃기다.",
+      "나 잘못 건드린 거 알죠?",
+      "하이고... 오늘 많이 운이 없으시네.",
+      "그래서 어쩔 건데요.",
+      "쓰읍... 참겠습니다. 오늘만.",
+      "일단 나한테 사과하고 시작해.",
+      "어머, 이런 분이셨어요?",
+      "되게 용감하시네요 ㅎ.",
+      "지금 당장 사라져 주실 수 있나요?",
+      "이 상황이 즐거우신가 봐요.",
+      "흠... 그럼 저도 할 말 있어요.",
+      "엄마가 그렇게 하라고 했어요?",
+      "와 이 분... 대단하시다 진짜.",
+      "나 지금 손이 떨리는데?",
+      "오늘 여기서 작별합시다.",
+      "쉬워 보이셨나요? ㅎ",
+      "말 다 했어요? 이제 내 차례야.",
+      "세상에 이런 무례가.",
+      "눈 마주쳐서 죄송한데요.",
+      "저 사실 많이 참았어요.",
+      "그 말 취소하세요, 지금 당장.",
+      "야 잠깐만, 뭐라고?",
+      "에휴... 포기합니다.",
+      "흑흑... 왜 그러세요...",
+      "알겠어요, 이제 전쟁이에요.",
+      "저 이 동네 살 거 아니라 참을게요.",
+    ];
+
+    const GRADES = [
+      { key: "L", label: "L", prob: 0.01, color: "#FF6B9D" },
+      { key: "SSR", label: "SSR", prob: 0.05, color: "#FFD700" },
+      { key: "SR", label: "SR", prob: 0.14, color: "#C9B1FF" },
+      { key: "R", label: "R", prob: 0.20, color: "#FF85A1" },
+      { key: "UC", label: "UC", prob: 0.30, color: "#6CB4D2" },
+      { key: "C", label: "C", prob: 0.30, color: "#C8C0D4" },
+    ];
+
+    // ============================================================
+    //  STATE
+    // ============================================================
+
+    let collected = {}; // id → { grade, level, speech } for dex display
+    let currentChar = null;
+    let currentGrade = null;
+    let currentLevel = 0;
+    let currentSpeech = "";
+    let userInput = "";
+
+    // ============================================================
+    //  UTILITIES
+    // ============================================================
+
+    function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function rollGrade() {
+      const r = Math.random();
+      let cumulative = 0;
+      for (const g of GRADES) {
+        cumulative += g.prob;
+        if (r < cumulative) return g;
+      }
+      return GRADES[GRADES.length - 1];
+    }
+
+    function rollLevel() { return Math.floor(Math.random() * 100) + 1; }
+
+    function imgUrl(char) {
+      if (char.img) return char.img; // 미소년: 애니 일러스트
+      // 빌런: DiceBear pixel-art 코믹 스타일
+      return `https://api.dicebear.com/9.x/pixel-art/svg?seed=${char.seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&radius=50`;
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + id).classList.add('active');
+    }
+
+    function saveState() {
+      try { localStorage.setItem('gacha_collected', JSON.stringify(collected)); } catch (e) { }
+    }
+    function loadState() {
+      try {
+        const d = localStorage.getItem('gacha_collected');
+        if (d) collected = JSON.parse(d);
+      } catch (e) { }
+    }
+
+    // ============================================================
+    //  FLOATING STARS
+    // ============================================================
+
+    function initStars() {
+      const bg = document.getElementById('starBg');
+      const emojis = ['⭐', '💫', '✨', '🌸', '💕', '🎀', '💜', '💙', '⚡', '🌟'];
+      for (let i = 0; i < 25; i++) {
+        const s = document.createElement('span');
+        s.textContent = rand(emojis);
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.animationDuration = (6 + Math.random() * 14) + 's';
+        s.style.animationDelay = (Math.random() * 15) + 's';
+        s.style.fontSize = (0.6 + Math.random() * 0.8) + 'rem';
+        bg.appendChild(s);
+      }
+    }
+
+    // ============================================================
+    //  CONFETTI
+    // ============================================================
+
+    function fireConfetti(count = 40) {
+      const colors = ['#FFB7C5', '#A8D8EA', '#C9B1FF', '#FFF3B0', '#B5EAD7', '#FFD700', '#FF6B9D'];
+      for (let i = 0; i < count; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-10px';
+        c.style.background = rand(colors);
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.width = c.style.height = (6 + Math.random() * 8) + 'px';
+        c.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        c.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }
+    }
+
+    // ============================================================
+    //  NAVIGATION
+    // ============================================================
+
+    function goToStart() {
+      updateStartCollected();
+      showScreen('start');
+    }
+
+    function goToInput() {
+      document.getElementById('sivi-input').value = '';
+      showScreen('input');
+    }
+
+    function showDex() {
+      renderDex();
+      showScreen('dex');
+    }
+
+    function updateStartCollected() {
+      const count = Object.keys(collected).length;
+      document.getElementById('start-collected').textContent = count;
+    }
+
+    // ============================================================
+    //  SUMMON FLOW
+    // ============================================================
+
+    function startSummon() {
+      const txt = document.getElementById('sivi-input').value.trim();
+      if (!txt) {
+        document.getElementById('sivi-input').style.borderColor = 'var(--pink-deep)';
+        document.getElementById('sivi-input').placeholder = '📣 시비 문구를 입력해주세요!';
+        document.getElementById('sivi-input').focus();
+        return;
+      }
+      userInput = txt;
+      showScreen('gacha');
+      runRoulette();
+    }
+
+    function runRoulette() {
+      // Roll results
+      const char = rand(CHARACTERS);
+      const grade = rollGrade();
+      const level = rollLevel();
+      const speech = rand(SPEECHES);
+
+      currentChar = char;
+      currentGrade = grade;
+      currentLevel = level;
+      currentSpeech = speech;
+
+      // Save to dex
+      if (!collected[char.id]) {
+        collected[char.id] = { grade: grade.key, level, speech };
+      } else {
+        // update best grade
+        const gradeOrder = ['L', 'SSR', 'SR', 'R', 'UC', 'C'];
+        const prev = gradeOrder.indexOf(collected[char.id].grade);
+        const curr = gradeOrder.indexOf(grade.key);
+        if (curr < prev) collected[char.id] = { grade: grade.key, level, speech };
+      }
+      saveState();
+
+      // Build roulette strips
+      buildRouletteStrip('roulette-char', CHARACTERS.map(c => c.name), char.name);
+      buildRouletteStrip('roulette-speech', SPEECHES, speech);
+
+      // Animate and then go to battle
+      setTimeout(() => {
+        showBattle();
+      }, 3200);
+    }
+
+    function buildRouletteStrip(containerId, items, final) {
+      const strip = document.getElementById(containerId);
+      strip.innerHTML = '';
+
+      // Add many random items + final
+      const pool = [];
+      for (let i = 0; i < 30; i++) pool.push(rand(items));
+      pool.push(final);
+
+      pool.forEach((name, idx) => {
+        const div = document.createElement('div');
+        div.className = 'roulette-item' + (idx === pool.length - 1 ? ' highlight' : '');
+        div.textContent = name;
+        strip.appendChild(div);
+      });
+
+      // Animate
+      const totalWidth = strip.scrollWidth;
+      const viewWidth = strip.parentElement.offsetWidth;
+      const finalEl = strip.lastElementChild;
+      const stopX = finalEl.offsetLeft - viewWidth / 2 + finalEl.offsetWidth / 2;
+
+      strip.style.transition = 'none';
+      strip.style.transform = 'translateX(0)';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          strip.style.transition = 'transform 2.8s cubic-bezier(0.25, 0.1, 0.05, 1)';
+          strip.style.transform = `translateX(${-stopX}px)`;
+        });
+      });
+    }
+
+    // ============================================================
+    //  BATTLE SCREEN
+    // ============================================================
+
+    function showBattle() {
+      showScreen('battle');
+
+      // Setup announce
+      const rate = (currentGrade.prob * 100).toFixed(0);
+      const banner = document.getElementById('announce-banner');
+      const isLegendaryVillain = currentGrade.key === 'L' && currentChar.type === 'villain';
+
+      banner.innerHTML = `
+    앗! 야생의 <span class="char-name">${currentChar.name}</span>
+    <strong>${currentGrade.label}</strong>&nbsp;Lv.<strong>${currentLevel}</strong>
+    이(가) 나타났다!<br/>
+    <span class="announce-rate">(${rate}% 확률 · ${currentChar.type === 'villain' ? '⚠️ 빌런' : '💖 미소년'})</span>
+    ${isLegendaryVillain ? '<br/>⚠️ <strong style="color:#FFD700">전설의 빌런 등장!! 위압감 MAX</strong> ⚠️' : ''}
+  `;
+
+      // Setup card
+      const card = document.getElementById('char-card');
+      card.className = 'char-card grade-' + currentGrade.key;
+      if (isLegendaryVillain) {
+        const aura = document.createElement('div');
+        aura.className = 'villain-L-aura';
+        card.appendChild(aura);
+      }
+
+      document.getElementById('grade-badge').className = 'grade-badge badge-' + currentGrade.key;
+      document.getElementById('grade-badge').textContent = currentGrade.label;
+
+      const img = document.getElementById('char-img');
+      img.src = imgUrl(currentChar);
+      img.alt = currentChar.name;
+
+      document.getElementById('char-name-big').textContent = currentChar.name;
+      document.getElementById('char-level').textContent = `Lv.${currentLevel}`;
+
+      const typeTag = document.getElementById('char-type-tag');
+      if (currentChar.type === 'villain') {
+        typeTag.className = 'char-type-tag tag-villain';
+        typeTag.textContent = '💀 빌런';
+      } else {
+        typeTag.className = 'char-type-tag tag-misoboy';
+        typeTag.textContent = '💕 미소년';
+      }
+
+      // Clear battle area
+      document.getElementById('battle-area').innerHTML = '';
+      document.getElementById('result-section').innerHTML = '';
+      document.getElementById('after-result-btns').style.display = 'none';
+
+      // Start battle sequence
+      setTimeout(() => doBattle(), 800);
+    }
+
+    function doBattle() {
+      const area = document.getElementById('battle-area');
+
+      // Step 1: User attacks
+      const userBubble = document.createElement('div');
+      userBubble.className = 'bubble bubble-user';
+      userBubble.textContent = `"${userInput}"`;
+      area.appendChild(userBubble);
+
+      // Step 2: Char hit reaction
+      setTimeout(() => {
+        const charCard = document.getElementById('char-card');
+        charCard.classList.add('char-shake');
+        setTimeout(() => charCard.classList.remove('char-shake'), 500);
+
+        // Hit text
+        const hit = document.createElement('div');
+        hit.className = 'hit-effect';
+        hit.textContent = '💥';
+        document.body.appendChild(hit);
+        setTimeout(() => hit.remove(), 900);
+
+        // Aaya
+        const aaya = document.createElement('div');
+        aaya.className = 'aaya-text';
+        aaya.textContent = '아야!! 🤕';
+        area.appendChild(aaya);
+        setTimeout(() => aaya.remove(), 1200);
+
+      }, 600);
+
+      // Step 3: Char counter-attack
+      setTimeout(() => {
+        const isRampage = currentLevel >= 80 && (currentGrade.key === 'L' || currentGrade.key === 'SSR');
+        const isShy = currentLevel <= 30;
+
+        let replyText = buildReply(isRampage, isShy);
+        const charBubble = document.createElement('div');
+
+        if (isRampage) {
+          charBubble.className = 'bubble bubble-rampage';
+          // Screen shake
+          document.getElementById('screen-battle').classList.add('screen-shake');
+          setTimeout(() => document.getElementById('screen-battle').classList.remove('screen-shake'), 2000);
+        } else if (isShy) {
+          charBubble.className = 'bubble bubble-char bubble-shy';
+        } else {
+          charBubble.className = 'bubble bubble-char';
+        }
+
+        charBubble.innerHTML = `<strong>${currentChar.name}:</strong> ${replyText}`;
+        area.appendChild(charBubble);
+
+        // Step 4: Result
+        setTimeout(() => showResult(), 1600);
+
+      }, 2000);
+    }
+
+    function buildReply(isRampage, isShy) {
+      const speech = currentSpeech;
+      const name = currentChar.name;
+      const grade = currentGrade.key;
+      const lv = currentLevel;
+
+      if (isRampage) {
+        return `⚡⚡⚡ ${speech} ⚡⚡⚡<br/>─ 폭주 반격 [${grade}] Lv.${lv} ─`;
+      }
+      if (isShy) {
+        return `...${speech.toLowerCase()}... (소심)`;
+      }
+      return `${speech}<br/><small style="opacity:0.6">— ${name} (${grade} Lv.${lv})</small>`;
+    }
+
+    function showResult() {
+      // Score calculation:
+      // Char power = level * gradeWeight
+      // User luck = random 0~100
+      const gradeWeights = { L: 6, SSR: 4, SR: 2.5, R: 1.8, UC: 1.2, C: 1 };
+      const charPower = currentLevel * gradeWeights[currentGrade.key];
+      const userLuck = Math.random() * 100 * 1.5; // user gets 1.5x multiplier for fun
+      const win = userLuck > charPower;
+
+      const section = document.getElementById('result-section');
+      const banner = document.createElement('div');
+      banner.className = 'result-banner ' + (win ? 'result-win' : 'result-lose');
+
+      if (win) {
+        banner.innerHTML = `
+      <div class="result-big">🎉 YOU WIN! 🎉</div>
+      <div class="result-msg">${currentChar.name}을(를) 굴복시켰습니다!</div>
+      <div class="result-score">유저 운 ${Math.round(userLuck)} vs 캐릭터 강함 ${Math.round(charPower)}</div>
+    `;
+        fireConfetti(60);
+      } else {
+        banner.innerHTML = `
+      <div class="result-big">💔 YOU LOSE...</div>
+      <div class="result-msg">${currentChar.name}에게 패배했습니다... 다시 도전!</div>
+      <div class="result-score">유저 운 ${Math.round(userLuck)} vs 캐릭터 강함 ${Math.round(charPower)}</div>
+    `;
+      }
+
+      section.appendChild(banner);
+      document.getElementById('after-result-btns').style.display = 'flex';
+      document.getElementById('after-result-btns').style.flexWrap = 'wrap';
+      document.getElementById('after-result-btns').style.justifyContent = 'center';
+      document.getElementById('after-result-btns').style.gap = '10px';
+      document.getElementById('after-result-btns').style.marginTop = '8px';
+    }
+
+    // ============================================================
+    //  DEX
+    // ============================================================
+
+    function renderDex() {
+      const grid = document.getElementById('dex-grid');
+      const count = Object.keys(collected).length;
+      document.getElementById('dex-count').textContent = `수집 ${count} / 50`;
+      grid.innerHTML = '';
+
+      const gradeColors = {
+        L: 'linear-gradient(90deg,#FF6B9D,#FFD700,#78D5FF,#C9B1FF)',
+        SSR: 'linear-gradient(90deg,#FFD700,#FFA500)',
+        SR: 'linear-gradient(90deg,#C9B1FF,#9B8FFF)',
+        R: 'linear-gradient(90deg,#FF85A1,#FF6B9D)',
+        UC: 'linear-gradient(90deg,#6CB4D2,#A8D8EA)',
+        C: '#C8C0D4',
+      };
+
+      CHARACTERS.forEach(char => {
+        const entry = document.createElement('div');
+        const isFound = !!collected[char.id];
+        entry.className = 'dex-entry' + (isFound ? '' : ' undiscovered');
+
+        const img = document.createElement('img');
+        img.src = imgUrl(char);
+        img.alt = isFound ? char.name : '???';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'dex-name';
+        nameEl.textContent = isFound ? char.name : '???';
+
+        if (isFound) {
+          const g = collected[char.id].grade;
+          const pill = document.createElement('div');
+          pill.className = 'dex-grade-pill';
+          pill.textContent = g;
+          pill.style.background = gradeColors[g] || '#ccc';
+          pill.style.color = g === 'UC' || g === 'C' ? '#444' : 'white';
+          entry.appendChild(img);
+          entry.appendChild(nameEl);
+          entry.appendChild(pill);
+        } else {
+          entry.appendChild(img);
+          entry.appendChild(nameEl);
+        }
+
+        grid.appendChild(entry);
+      });
+    }
+
+    // ============================================================
+    //  INIT
+    // ============================================================
+
+    loadState();
+    initStars();
+    updateStartCollected();
+
+    // Enter key on textarea
+    document.getElementById('sivi-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        startSummon();
+      }
+    });
+  </script>
+</body>
+
+</html>
